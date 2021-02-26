@@ -1,0 +1,27 @@
+---
+# tasks file for mysql
+
+- name: Install some common packages
+  apt:
+    name: "{{ common_packages }}"
+  vars:
+    common_packages:
+      - python-apt
+      - python-pymysql
+      - python3-apt
+      - python3-pymysql
+  become: true
+
+
+- name: Create mysql database
+  mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ wp_mysql_db }}"
+    state: present
+
+- name: Create mysql user
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ wp_mysql_user }}"
+    password: "{{ wp_mysql_password }}"
+    priv: "*.*:ALL"
